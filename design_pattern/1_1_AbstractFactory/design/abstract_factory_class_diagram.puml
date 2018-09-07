@@ -7,49 +7,48 @@ note as memo
     プレーンテキストでも、SVGでも出力できる。
 endnote
 
-class PlainTextDiagramFactory {
-    "PlainTextDiagramFactory (プレーンテキスト形式の図形ファクトリ)"
+note as 
+
+class DiagramFactory {
+    "図形生成インスタンスのファクトリの基底クラス"
     --
     ダイアグラムを生成する(横幅: Integer, 縦幅: Integer)
     四角形を生成する(横幅: Integer, 縦幅: Integer)
     テキストを生成する(x座標: Integer, y座標: Integer, テキスト文: String, フォントサイズ: Integer)
 }
-class PlainTextDiagramFactory.Diagram {
+
+class DiagramFactory.Diagram {
     "Diagram(図形)"
     --
     追加する(コンポーネント: Component)
 }
 
-class PlainTextDiagramFactory.Component {
+class DiagramFactory.Component {
     "Component(図形の構成要素)"
     --
 
 }
 
-class PlainTextDiagramFactory.Rectangle {
+class DiagramFactory.Rectangle {
     "Rectangle(四角形)"
     --
 }
 
-class PlainTextDiagramFactory.Text {
+class DiagramFactory.Text {
     "Text(テキスト)"
     --
 }
 
-PlainTextDiagramFactory --> PlainTextDiagramFactory.Diagram
-PlainTextDiagramFactory --> PlainTextDiagramFactory.Rectangle
-PlainTextDiagramFactory --> PlainTextDiagramFactory.Text
-PlainTextDiagramFactory.Diagram *-- PlainTextDiagramFactory.Component
+DiagramFactory --> DiagramFactory.Diagram
+DiagramFactory --> DiagramFactory.Rectangle
+DiagramFactory --> DiagramFactory.Text
+DiagramFactory.Diagram *-- DiagramFactory.Component
 
-PlainTextDiagramFactory.Text --|> PlainTextDiagramFactory.Component
-PlainTextDiagramFactory.Rectangle --|> PlainTextDiagramFactory.Component
+DiagramFactory.Text --|> DiagramFactory.Component
+DiagramFactory.Rectangle --|> DiagramFactory.Component
 
 class SVGDiagramFactory {
     "SVGDiagramFactory (ダイアグラムファクトリ)"
-    --
-    ダイアグラムを生成する(横幅: Integer, 縦幅: Integer)
-    四角形を生成する(横幅: Integer, 縦幅: Integer)
-    テキストを生成する(x座標: Integer, y座標: Integer, テキスト文: String, フォントサイズ: Integer)
 }
 
 class SVGDiagramFactory.Diagram {
@@ -80,4 +79,7 @@ SVGDiagramFactory.Diagram *-- SVGDiagramFactory.Component
 
 SVGDiagramFactory.Text --|> SVGDiagramFactory.Component
 SVGDiagramFactory.Rectangle --|> SVGDiagramFactory.Component
+
+PlainTextDiagramFactory --|> DiagramFactory
+SVGDiagramFactory --|> DiagramFactory
 @enduml
