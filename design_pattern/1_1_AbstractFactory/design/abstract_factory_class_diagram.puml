@@ -1,0 +1,83 @@
+@startuml
+
+title Abstract Factoryクラス図
+
+note as memo
+    図形を生成するプログラム。
+    プレーンテキストでも、SVGでも出力できる。
+endnote
+
+class PlainTextDiagramFactory {
+    "PlainTextDiagramFactory (プレーンテキスト形式の図形ファクトリ)"
+    --
+    ダイアグラムを生成する(横幅: Integer, 縦幅: Integer)
+    四角形を生成する(横幅: Integer, 縦幅: Integer)
+    テキストを生成する(x座標: Integer, y座標: Integer, テキスト文: String, フォントサイズ: Integer)
+}
+class PlainTextDiagramFactory.Diagram {
+    "Diagram(図形)"
+    --
+    追加する(コンポーネント: Component)
+}
+
+class PlainTextDiagramFactory.Component {
+    "Component(図形の構成要素)"
+    --
+
+}
+
+class PlainTextDiagramFactory.Rectangle {
+    "Rectangle(四角形)"
+    --
+}
+
+class PlainTextDiagramFactory.Text {
+    "Text(テキスト)"
+    --
+}
+
+PlainTextDiagramFactory --> PlainTextDiagramFactory.Diagram
+PlainTextDiagramFactory --> PlainTextDiagramFactory.Rectangle
+PlainTextDiagramFactory --> PlainTextDiagramFactory.Text
+PlainTextDiagramFactory.Diagram *-- PlainTextDiagramFactory.Component
+
+PlainTextDiagramFactory.Text --|> PlainTextDiagramFactory.Component
+PlainTextDiagramFactory.Rectangle --|> PlainTextDiagramFactory.Component
+
+class SVGDiagramFactory {
+    "SVGDiagramFactory (ダイアグラムファクトリ)"
+    --
+    ダイアグラムを生成する(横幅: Integer, 縦幅: Integer)
+    四角形を生成する(横幅: Integer, 縦幅: Integer)
+    テキストを生成する(x座標: Integer, y座標: Integer, テキスト文: String, フォントサイズ: Integer)
+}
+
+class SVGDiagramFactory.Diagram {
+    "Diagram(図形)"
+    --
+    追加する(コンポーネント: component)
+}
+
+class SVGDiagramFactory.Component {
+    "Component(図形の構成要素)"
+    --
+}
+
+class SVGDiagramFactory.Rectangle {
+    "Rectangle(四角形)"
+    --
+}
+
+class SVGDiagramFactory.Text {
+    "Text(テキスト)"
+    --
+}
+
+SVGDiagramFactory --> SVGDiagramFactory.Diagram
+SVGDiagramFactory --> SVGDiagramFactory.Rectangle
+SVGDiagramFactory --> SVGDiagramFactory.Text
+SVGDiagramFactory.Diagram *-- SVGDiagramFactory.Component
+
+SVGDiagramFactory.Text --|> SVGDiagramFactory.Component
+SVGDiagramFactory.Rectangle --|> SVGDiagramFactory.Component
+@enduml
