@@ -22,7 +22,7 @@ NotImplemetedErrorを発生させるようにしている。このアプロー�
 
 ### 読書メモ
 
-### Pythonのメモ
+### Pythonのメモ
 
 `sys.intern()`
 https://docs.python.org/3.7/library/sys.html#sys.intern

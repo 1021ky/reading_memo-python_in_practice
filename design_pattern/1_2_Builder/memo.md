@@ -14,7 +14,7 @@
 
 ### 読書メモ
 
-### Pythonのメモ
+### Pythonのメモ
 
 実践Python3によるとabc.ABCMetaを与えると実行時にわずかなオーバーヘッドが発生するらしい。
 > When the class definition is read, if __metaclass__ is defined then the callable assigned to it will be called instead of type(). This allows classes or functions to be written which monitor or alter the class creation process:
