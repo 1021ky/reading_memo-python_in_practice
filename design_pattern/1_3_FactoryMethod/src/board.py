@@ -99,12 +99,14 @@ class CheckersBoard(AbstractBoard):
 
 
 class ChessBoard(AbstractBoard):
+    """チェス盤クラス"""
 
     def __init__(self):
         super().__init__(8, 8)
 
 
     def populate_board(self):
+        """盤に駒を置く"""
         for row, color in ((0, BLACK), (7, WHITE)):
             for columns, kind in (((0, 7), ROOK), ((1, 6), KNIGHT),
                     ((2, 5), BISHOP), ((3,), QUEEN), ((4,), KING)):
@@ -116,6 +118,7 @@ class ChessBoard(AbstractBoard):
 
 
 def create_piece(kind, color):
+    """指定された色と種類の名前のPieceクラスの子クラスのインスタンスを生成する"""
     color = "White" if color == WHITE else "Black"
     name = {DRAUGHT: "Draught", PAWN: "ChessPawn", ROOK: "ChessRook",
             KNIGHT: "ChessKnight", BISHOP: "ChessBishop",
@@ -131,14 +134,13 @@ class Piece(str):
 # Unicodeに駒の文字が定義されている。そのコードの名前のクラスを定義する
 for code in itertools.chain((0x26C0, 0x26C2), range(0x2654, 0x2660)):
     char = chr(code)
-    print(f'char:{char}')
     name = unicodedata.name(char).title().replace(" ", "")
     if name.endswith("sMan"):
         name = name[:-4]
-    # コンストラクタに
-    new = (lambda char: lambda Class: Piece.__new__(Class, char))(char)
+    # 定義するメソッドのコンストラクタの引数として駒の文字が渡るようにする
+    new = (lambda c: lambda Class: Piece.__new__(Class, c))(char)
     new.__name__ = "__new__"
-    # Pieceクラスを継承して属性なしのクラスを定義してglobalで使えるようにする
+    # Pieceクラスを継承するクラスを生成してglobalで使えるようにする
     Class = type(name, (Piece,), dict(__slots__=(), __new__=new))
     globals()[name] = Class
 
