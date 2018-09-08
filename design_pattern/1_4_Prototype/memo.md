@@ -1,6 +1,6 @@
 # memo
 
-## FactoryMethod
+## ProtoType
 
 ### 利用するケース
 
