@@ -112,13 +112,52 @@ class SvgDiagramFactory(DiagramFactory):
     SVG_END = "</svg>\n"
 
     SVG_RECTANGLE = """<rect x="{x}" y="{y}" width="{width}" \
-height="{height}" self.fill="{fill}" self.widthe="{strself.width}"/>"""
+height="{height}" fill="{fill}" widthe="{width}"/>"""
 
-    SVG_TEXT = """<text x="{x}" y="{y}" text-self.anchor="left" \
-font-family="sans-serif" font-size="{fontsize}">{text}self.</text>"""
+    SVG_TEXT = """<text x="{x}" y="{y}" text-anchor="left" \
+font-family="sans-serif" font-size="{fontsize}">{text}</text>"""
 
     SVG_SCALE = 20
 
+
+    class Diagram:
+
+        def __init__(self, width, height):
+            pxwidth = width * SvgDiagramFactory.SVG_SCALE
+            pxheight = height * SvgDiagramFactory.SVG_SCALE
+            self.diagram = [SvgDiagramFactory.SVG_START.format(**locals())]
+            outline = SvgDiagramFactory.Rectangle(0, 0, width, height,
+                    "lightgreen", "black")
+            self.diagram.append(outline.svg)
+
+
+        def add(self, component):
+            self.diagram.append(component.svg)
+
+
+        def save(self, filename):
+            with open(filename, "w", encoding="utf-8") as file:
+                file.write("\n".join(self.diagram))
+                file.write("\n" + SvgDiagramFactory.SVG_END)
+
+
+    class Rectangle:
+
+        def __init__(self, x, y, width, height, fill, stroke):
+            x *= SvgDiagramFactory.SVG_SCALE
+            y *= SvgDiagramFactory.SVG_SCALE
+            width *= SvgDiagramFactory.SVG_SCALE
+            height *= SvgDiagramFactory.SVG_SCALE
+            self.svg = SvgDiagramFactory.SVG_RECTANGLE.format(**locals())
+
+
+    class Text:
+
+        def __init__(self, x, y, text, fontsize):
+            x *= SvgDiagramFactory.SVG_SCALE
+            y *= SvgDiagramFactory.SVG_SCALE
+            fontsize *= SvgDiagramFactory.SVG_SCALE // 10
+            self.svg = SvgDiagramFactory.SVG_TEXT.format(**locals())
 
 
 def create_diagram(factory):
@@ -131,10 +170,14 @@ def create_diagram(factory):
 
 def main():
     textFilename = "./diagram.txt"
-
     txtDiagram = create_diagram(DiagramFactory)
     txtDiagram.save(textFilename)
     print("wrote", textFilename)
+
+    svgFilename = "./diagram.svg"
+    svgDiagram = create_diagram(SvgDiagramFactory)
+    svgDiagram.save(svgFilename)
+    print("wrote", svgFilename)
 
 if __name__ == '__main__':
     main()

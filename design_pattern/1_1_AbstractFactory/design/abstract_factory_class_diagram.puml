@@ -5,15 +5,16 @@ title Abstract Factoryクラス図
 note as memo
     図形を生成するプログラム。
     プレーンテキストでも、SVGでも出力できる。
+
+    図形を生成する側はFactoryクラスの振る舞いについて知っていれば必要な図形を生成できる。
+    図形が増えたときはFactoryクラスを追加する。
 endnote
 
-note as 
-
 class DiagramFactory {
-    "図形生成インスタンスのファクトリの基底クラス"
+    "図形生成インスタンスのファクトリの基底クラス。具象クラスでもある。"
     --
     ダイアグラムを生成する(横幅: Integer, 縦幅: Integer)
-    四角形を生成する(横幅: Integer, 縦幅: Integer)
+    四角形を生成する(x座標: Integer, y座標: Integer, 横幅: Integer, 縦幅: Integer, 四角形を埋める色: String, stroke: String)
     テキストを生成する(x座標: Integer, y座標: Integer, テキスト文: String, フォントサイズ: Integer)
 }
 
@@ -80,6 +81,5 @@ SVGDiagramFactory.Diagram *-- SVGDiagramFactory.Component
 SVGDiagramFactory.Text --|> SVGDiagramFactory.Component
 SVGDiagramFactory.Rectangle --|> SVGDiagramFactory.Component
 
-PlainTextDiagramFactory --|> DiagramFactory
 SVGDiagramFactory --|> DiagramFactory
 @enduml
