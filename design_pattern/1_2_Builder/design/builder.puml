@@ -1,0 +1,41 @@
+@startuml
+
+title Builderクラス図
+
+' note top
+' end note
+
+abstract class AbstractFormBuilder {
+    "フォーム生成の抽象基底クラス。"
+    --
+    タイトル
+    {abstract}フォームを生成する()
+    {abstract}ラベルを追加する()
+    {abstract}エントリーを追加する()
+    {abstract}ボタンを追加する()
+}
+
+class TkFormBuilder {
+    "Tkinterのフォームのビルダー"
+    --
+    フォームの部品を追加する文
+}
+
+note bottom of TkFormBuilder
+    属性として内包する部品を追加する文を持つ
+end note
+
+class HtmlFormBuilder {
+    "HTMLのフォームのビルダー"
+    --
+    bodyタグを構成するタグとその値
+}
+
+note bottom of HtmlFormBuilder
+    属性としてbodyタグに内包するタグを持つ
+end note
+
+AbstractFormBuilder <|-- TkFormBuilder 
+AbstractFormBuilder <|-- HtmlFormBuilder
+
+@enduml
