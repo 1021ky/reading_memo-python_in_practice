@@ -1,0 +1,64 @@
+@startuml
+
+title FactoryMethodクラス図
+
+
+
+note as noteAlias
+    ゲームボードを出力するプログラム。
+    実行時にチェスかチェッカーかどちらが選択されても適切にコマや盤を出力する。
+end note
+
+
+abstract class AbstractBoard {
+    "ボードの基底抽象クラス"
+    --
+    + {abstract}ボードに駒を置く()
+    - ボードを文字列に変換する()
+}
+
+note bottom of AbstractBoard
+    抽象メソッドがファクトリメソッド。
+    ボードクラスが生成されたときに必要なクラスのインスタンスをファクトリメソッドで作る
+end note
+
+class CheckersBoard {
+    "チェッカーボードクラス"
+    --
+    黒駒: BlackDraught
+    白駒: WhiteDraught
+}
+
+class ChessBoard {
+    "チェスボードクラス"
+    --
+    黒ポーン: BlackChessPawn
+    黒ルーク: BlackChessRook
+    黒ナイト: BlackChessKnight
+    黒ビショップ: BlackChessBishop
+    黒クイーン: BlackChessQueen
+    黒キング: BlackChessKing
+    (白も同様の駒あり)
+}
+
+ChessBoard *-- BlackChessPawn
+ChessBoard *-- BlackChessRook
+ChessBoard *-- BlackChessKnight
+ChessBoard *-- BlackChessBishop
+ChessBoard *-- BlackChessQueen
+ChessBoard *-- BlackChessKing
+CheckersBoard *-- BlackDraught
+CheckersBoard *-- WhiteDraught
+
+AbstractBoard <|-- ChessBoard
+AbstractBoard <|-- CheckersBoard
+Piece <|-- BlackChessPawn
+Piece <|-- BlackChessRook
+Piece <|-- BlackChessKnight
+Piece <|-- BlackChessBishop
+Piece <|-- BlackChessQueen
+Piece <|-- BlackChessKing
+Piece <|-- BlackDraught
+Piece <|-- WhiteDraught
+
+@enduml
