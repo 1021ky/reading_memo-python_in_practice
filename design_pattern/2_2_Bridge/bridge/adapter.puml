@@ -1,0 +1,63 @@
+@startuml
+
+title Adapterクラス図
+
+
+
+note as noteAlias
+    ページ描画を行う。
+    ページクラスは、レンダラー(描画)クラスの詳細を知らなくていいようにしたい。
+    →HtmlWriterのAdapterとなるクラスを作って、実現する。
+end note
+
+' def
+
+class Page {
+    "ページ描画クラス"
+    --
+    + init(タイトル: string, レンダラー: Render)
+    + パラグラフを追加する(paragraph: string)
+}
+
+class TextRenderer {
+    "テキストレンダークラス"
+    --
+    + init(横幅: int, 出力先)
+    + ヘッダーを設定する(タイトル: string)
+    + パラグラフを設定する(テキスト: string)
+    + フッターを設定する()
+}
+
+class HtmlRenderer {
+    "Htmlで描画する
+    HtmlWriterのAdapterクラス。
+    こいつのおかげで、PageクラスはHtmlで描画したい時にHtmlWriteのインタフェースを気にしなくていい
+    HtmlWriterの変更があってもPageクラスは影響を受けない
+    "
+    --
+    htmlWriter:HtmlWriter
+    + init(htmlWriter: HtmlWriter)
+    + ヘッダーを設定する(タイトル: string)
+    + パラグラフを設定する(テキスト: string)
+    + フッターを設定する()
+}
+
+
+class HtmlWriter {
+    "Htmlタグを出力する"
+    --
+    + init(出力先)
+    + ヘッダーを設定する()
+    + タイトルを設定する(タイトル: string)
+    + body開始タグを設定する()
+    + bodyタグの内容を設定する(テキスト: string)
+    + body終了タグを設定する()
+    + フッターを設定する()
+}
+
+' rel
+HtmlWriter --* HtmlRenderer
+Page -> HtmlRenderer
+Page -> TextRenderer
+
+@enduml
