@@ -1,0 +1,55 @@
+@startuml
+
+title Bridgeクラス図
+
+
+
+note as noteAlias
+    棒グラフの描画を行う。
+    Bridgeパターンを使って、機能と実装の分離を行う。
+    今回の場合、棒グラフの描画機能はBarCharterが持っているが、
+    描画の詳細な実装はIRendererのインタフェースを持ったクラスで行われる。
+end note
+
+' def
+
+class BarCharter {
+    "棒グラフ描画クラス"
+    --
+    - 描画処理担当: IRenderer
+    --
+    + init(レンダラー: IRenderer)
+    + 描画を行う(キャプション: string, 項目名と値: tuple)
+}
+
+interface IRenderer {
+    "描画処理を実装するクラスのインタフェース。デコレータで実現している。"
+    --
+    + 初期化する(描画するグラフのリスト: list[棒], 最大値: int)
+    + キャプションを描画する(キャプション:string)
+    + 棒グラフを描画する(グラフ名:string, 値:int)
+    + 終了する()
+}
+
+class TextBarRenderer {
+    "テキスト形式で棒グラフを描画するクラス"
+    --
+    + 拡大率: int
+    --
+    + init(拡大率: int)
+}
+
+class ImageBarRenderer {
+    "画像形式で棒グラフを描画するクラス"
+    --
+    + 棒グラフの色リスト: string
+    --
+    + init(棒グラフの高さ: int, 棒グラフの幅: int, グラフの幅: int)   
+}
+
+' rel
+BarCharter *-- IRenderer
+IRenderer <-- ImageBarRenderer
+IRenderer <-- TextBarRenderer
+
+@enduml

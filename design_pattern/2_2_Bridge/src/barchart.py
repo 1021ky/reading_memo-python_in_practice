@@ -12,8 +12,12 @@
 
 # 相対インポートは実行ディレクトリが決まっている前提となるためよくないけど、Qtrac importのため使う
 from sys import path
-path.insert("../../")
+path.append("../../common_src")
 
+from PIL import Image, ImageColor, ImageDraw
+import re
+import os
+import tempfile
 import Qtrac
 
 
@@ -21,10 +25,6 @@ class BarCharter:
     """棒グラフ描画クラス"""
 
     def __init__(self, renderer):
-        if not isinstance(renderer, BarRenderer):
-            raise TypeError(
-                "Expected object of type BarRenderer, got {}".format(
-                    type(renderer).__name__))
         self.__renderer = renderer
 
     def render(self, caption, pairs):
@@ -41,11 +41,66 @@ class BarCharter:
 # デコレータで必要なインタフェースを具象クラスがもっていることを示す
 @Qtrac.has_methods("initialize", "draw_caption", "draw_bar", "finalize")
 class TextBarRenderer:
-    pass
+    """テキスト形式で棒グラフを描画するクラス"""
+    def __init__(self, scaleFactor=40):
+        self.scaleFactor = scaleFactor
+
+    def initialize(self, bars, maximum):
+        assert bars > 0 and maximum > 0
+        self.scale = self.scaleFactor / maximum
+
+    def draw_caption(self, caption):
+        print("{0:^{2}}\n{1:^{2}}".format(caption, "=" * len(caption),
+                                          self.scaleFactor))
+
+    def draw_bar(self, name, value):
+        print("{} {}".format("*" * int(value * self.scale), name))
+
+    def finalize(self):
+        pass
 
 @Qtrac.has_methods("initialize", "draw_caption", "draw_bar", "finalize")
 class ImageBarRenderer:
-    pass
+    """画像形式で棒グラフを描画するクラス"""
+    COLORS = [
+        ImageColor.getrgb(name)
+        for name in ("red", "green", "blue", "yellow", "magenta", "cyan")
+    ]
+
+    def __init__(self, stepHeight=10, barWidth=30, barGap=2):
+        self.stepHeight = stepHeight
+        self.barWidth = barWidth
+        self.barGap = barGap
+
+    def finalize(self):
+        self.image.save(self.filename)
+        print("wrote", self.filename)
+
+    def initialize(self, bars, maximum):
+        assert bars > 0 and maximum > 0
+        self.index = 0
+        color = ImageColor.getrgb("white")
+        self.image = Image.new(
+            mode="RGB",
+            size=(bars * (self.barWidth + self.barGap),
+                  maximum * self.stepHeight),
+            color=color)
+
+    def draw_caption(self, caption):
+        self.filename = os.path.join(tempfile.gettempdir(),
+                                     re.sub(r"\W+", "_", caption) + ".png")
+
+    def draw_bar(self, name, value):
+        color = ImageBarRenderer.COLORS[self.index % len(
+            ImageBarRenderer.COLORS)]
+        _, height = self.image.size
+        x0 = self.index * (self.barWidth + self.barGap)
+        x1 = x0 + self.barWidth
+        y0 = height - (value * self.stepHeight)
+        y1 = height - 1
+        draw = ImageDraw.Draw(self.image)
+        draw.rectangle(xy=[(x0, y0), (x1, y1)], fill=color)
+        self.index += 1
 
 
 def main():
@@ -55,3 +110,7 @@ def main():
     textBarCharter.render("Forecast 6/8", pairs)
     imageBarCharter = BarCharter(ImageBarRenderer())
     imageBarCharter.render("Forecast 6/8", pairs)
+
+
+if __name__ == '__main__':
+    main()
